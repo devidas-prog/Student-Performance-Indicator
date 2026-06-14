@@ -20,17 +20,14 @@ from sklearn.metrics import (
     mean_squared_error
 )
 
-# =====================================
 # Load Dataset
-# =====================================
 
 df = pd.read_csv("StudentsPerformance_3_lyst1729690388778 (1).csv")
 
 print(df.head())
 
-# =====================================
 # Data Checks
-# =====================================
+
 
 print("\nShape:")
 print(df.shape)
@@ -47,9 +44,8 @@ print(df.duplicated().sum())
 print("\nStatistics:")
 print(df.describe())
 
-# =====================================
+
 # Exploratory Data Analysis
-# =====================================
 
 plt.figure(figsize=(8,5))
 sns.histplot(df["math score"], kde=True)
@@ -79,35 +75,28 @@ sns.heatmap(
 plt.title("Correlation Matrix")
 plt.show()
 
-# =====================================
-# Feature Selection
-# =====================================
 
+# Feature Selection
 X = df.drop("math score", axis=1)
 y = df["math score"]
 
-# =====================================
-# Preprocessing
-# =====================================
 
+# Preprocessing
 categorical_features = X.select_dtypes(
     include="object"
 ).columns
 
 preprocessor = ColumnTransformer(
     transformers=[
-        (
-            "cat",
+        ( "cat",
             OneHotEncoder(handle_unknown="ignore"),
-            categorical_features
-        )
+            categorical_features )
     ],
     remainder="passthrough"
 )
 
-# =====================================
+
 # Train Test Split
-# =====================================
 
 X_train, X_test, y_train, y_test = train_test_split(
     X,
@@ -116,9 +105,8 @@ X_train, X_test, y_train, y_test = train_test_split(
     random_state=42
 )
 
-# =====================================
+
 # Models
-# =====================================
 
 models = {
     "Linear Regression": LinearRegression(),
@@ -132,10 +120,7 @@ results = {}
 best_model = None
 best_score = -999
 
-# =====================================
 # Training & Evaluation
-# =====================================
-
 for name, model in models.items():
 
     pipeline = Pipeline([
@@ -166,16 +151,12 @@ for name, model in models.items():
         best_score = r2
         best_model = pipeline
 
-# =====================================
-# Best Model
-# =====================================
 
+# Best Model
 print("\nBest Model Score:", best_score)
 
-# =====================================
-# Save Model
-# =====================================
 
+# Save Model
 with open("best_model.pkl", "wb") as file:
     pickle.dump(best_model, file)
 
